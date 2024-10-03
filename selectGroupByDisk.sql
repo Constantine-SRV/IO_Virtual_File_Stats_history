@@ -41,23 +41,18 @@ SELECT
     CAST(SUM(num_of_bytes_read - prev_num_of_bytes_read) / (60.0 * 1024.0 * 1024.0) AS NUMERIC(12,2)) AS [Read Throughput (MB/s)],
     CAST(SUM(num_of_bytes_written - prev_num_of_bytes_written) / (60.0 * 1024.0 * 1024.0) AS NUMERIC(12,2)) AS [Write Throughput (MB/s)],
     
-    CASE 
-        WHEN SUM(num_of_reads - prev_num_of_reads) = 0 THEN 0 
-        ELSE SUM(io_stall_read_ms - prev_io_stall_read_ms) / SUM(num_of_reads - prev_num_of_reads)
-    END AS [Avg Read Latency (ms)],
+    IIF(SUM(num_of_reads - prev_num_of_reads) = 0, 0, 
+	SUM(io_stall_read_ms - prev_io_stall_read_ms) / SUM(num_of_reads - prev_num_of_reads)) AS [Avg Read Latency (ms)],
     
-    CASE 
-        WHEN SUM(num_of_writes - prev_num_of_writes) = 0 THEN 0 
-        ELSE SUM(io_stall_write_ms - prev_io_stall_write_ms) / SUM(num_of_writes - prev_num_of_writes)
-    END AS [Avg Write Latency (ms)],
+    IIF(SUM(num_of_writes - prev_num_of_writes) = 0, 0, 
+	SUM(io_stall_write_ms - prev_io_stall_write_ms) / SUM(num_of_writes - prev_num_of_writes)) AS [Avg Write Latency (ms)],
     
-    CASE 
-        WHEN SUM((num_of_reads - prev_num_of_reads) + (num_of_writes - prev_num_of_writes)) = 0 THEN 0 
-        ELSE SUM(io_stall - prev_io_stall) / SUM((num_of_reads - prev_num_of_reads) + (num_of_writes - prev_num_of_writes))
-    END AS [Avg Overall Latency (ms)]
+    IIF(SUM((num_of_reads - prev_num_of_reads) + (num_of_writes - prev_num_of_writes)) = 0, 0, 
+	SUM(io_stall - prev_io_stall) / SUM((num_of_reads - prev_num_of_reads) + (num_of_writes - prev_num_of_writes))) AS [Avg Overall Latency (ms)]
     
 FROM FileStatsWithLag
 WHERE prev_num_of_reads IS NOT NULL
   AND prev_num_of_writes IS NOT NULL
 GROUP BY DriveLetter, dt
+--HAVING IIF(SUM((num_of_reads - prev_num_of_reads) + (num_of_writes - prev_num_of_writes)) = 0, 0, SUM(io_stall - prev_io_stall) / SUM((num_of_reads - prev_num_of_reads) + (num_of_writes - prev_num_of_writes))) > 0
 ORDER BY dt DESC, DriveLetter;
