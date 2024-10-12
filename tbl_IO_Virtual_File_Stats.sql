@@ -1,7 +1,7 @@
 USE [adminTools] -- or use master
 
 CREATE TABLE [dbo].[tbl_IO_Virtual_File_Stats](
-    [RecordID] [int] IDENTITY(1,1) NOT NULL,
+    [RecordID] [bigint] IDENTITY(1,1) NOT NULL,
     [database_id] [smallint] NULL,
     [file_id] [smallint] NULL,
     [sample_ms] [bigint] NULL,
