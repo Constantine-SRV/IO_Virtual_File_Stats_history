@@ -47,10 +47,10 @@ BEGIN
     IF @tbSize > @maxTbSizeMb
     BEGIN
         -- Delete 10% of the oldest records
-        DELETE TOP (10) PERCENT FROM tbl_IO_Virtual_File_Stats;
+        DELETE TOP (10) PERCENT FROM tbl_IO_Virtual_File_Stats;  -- if only one index
 
         -- Notify about the deletion
-        SET @msgTxt = '!----- Deleted top 10% of records --------- ' + CAST(@@ROWCOUNT AS NVARCHAR) + '  records at ' + CONVERT(VARCHAR(5), GETDATE(), 108);
+        SET @msgTxt = '!----- Deleted top 10prc of records --------- ' + CAST(@@ROWCOUNT AS NVARCHAR) + '  records at ' + CONVERT(VARCHAR(5), GETDATE(), 108);
         RAISERROR(@msgTxt, 0, 1) WITH NOWAIT;
         
         -- Rebuild the primary key index after deletion
