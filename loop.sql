@@ -1,5 +1,5 @@
 --use db with tbl_IO_Virtual_File_Stats
-DECLARE @maxTbSizeMb INT = 100;      -- Maximum allowed size in MB before cleanup
+DECLARE @maxTbSizeMb INT = 20;      -- Maximum allowed size in MB before cleanup
 
 DECLARE @waitForTime NVARCHAR(8);    -- Variable to store the next execution time
 DECLARE @msgTxt NVARCHAR(100);       -- Variable to store the message text
