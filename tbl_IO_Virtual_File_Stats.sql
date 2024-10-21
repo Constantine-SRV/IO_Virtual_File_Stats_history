@@ -22,7 +22,6 @@ CONSTRAINT [PK_tbl_IO_Virtual_File_Stats] PRIMARY KEY CLUSTERED
     DATA_COMPRESSION = PAGE 
    ) ON [PRIMARY]
 ) ON [PRIMARY]
-WITH (DATA_COMPRESSION = PAGE)
 GO
 
 ALTER TABLE [dbo].[tbl_IO_Virtual_File_Stats] ADD  DEFAULT (getdate()) FOR [dt]
